@@ -6,8 +6,6 @@ easyblog is a simple almost-single file CMS that allows you to quickly get a blo
 
 copy the files in this repostiory into a directory with PHP and apache (most free PHP hosting providers will give you this) and you now have a blog! :D
 
-you will also need to rename `visible-htaccess` to `.htaccess`.
-
 Feel free to edit the settings at the top of `index.php` for more customization.
 
 ## how to write something
