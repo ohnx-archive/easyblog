@@ -12,7 +12,7 @@ Feel free to edit the settings at the top of `index.php` for more customization.
 
 ## how to write something
 
-put a file in the `posts/` in the format YYYY-MM-DD-<title of the post>.txt
+put a file in the `posts/` in the format YYYY-MM-DD-\<title of the post\>.txt
 
 ie, `2015-07-01-Happy Birthday Canada.txt`
 
