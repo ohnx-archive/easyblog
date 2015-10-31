@@ -70,6 +70,7 @@ if($pageMode === "single") {
 			echo "<h3 class=\"article-date\">Posted ".$monthName." ".$filedelims[2].", ".$filedelims[0]."</h3>\n";
 			echo "<h3 class=\"article-date\">Last edited " . date( 'F d Y, H:i:s', filemtime($file) ) . "</h3>\n";
 			echo $Parsedown->text(file_get_contents($file));
+			echo '</article><article>'
 		}
 
 	echo '<table class="page-nav"><tr><td class="page-nav-cell align-left">';
