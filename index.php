@@ -42,6 +42,7 @@ if($pageMode === "single") {
 		echo "<h3 class=\"article-date\">Last edited: " . date( 'F d Y, H:i:s', filemtime($file) ) . "</h3>\n";
 		echo $Parsedown->text(fread($fileHandle,filesize($file)));
 		fclose($fileHandle);
+		echo '</article>';
 	} else {
 		echo "<h1>Couldn't find a post like that</h1><p>Oops! A post with the filename <b>".$file."</b> couldn't be found. Maybe you'll have better luck with <a href=\"/\">the main index</a>?</p>\n";
 	}
@@ -70,9 +71,9 @@ if($pageMode === "single") {
 			echo "<h3 class=\"article-date\">Posted ".$monthName." ".$filedelims[2].", ".$filedelims[0]."</h3>\n";
 			echo "<h3 class=\"article-date\">Last edited " . date( 'F d Y, H:i:s', filemtime($file) ) . "</h3>\n";
 			echo $Parsedown->text(file_get_contents($file));
-			echo '</article><article>'
+			echo '</article><article>';
 		}
-
+	echo '</article>';
 	echo '<table class="page-nav"><tr><td class="page-nav-cell align-left">';
 	if($maxi < count($files)) {
 		echo "<a href=\"/page/" . ($pageNum+1). "\">Older</a>";
@@ -84,7 +85,6 @@ if($pageMode === "single") {
 	echo "</td></tr></table>";
 }
 ?>
-		</article>
 		<footer>
 			<hr />
 			<?php echo $PAGE_FOOTERTEXT; ?>
