@@ -24,3 +24,8 @@ either edit style.css, or create your own file and include it in the php file.
 
 portions of this repository (ie, Parsedown.php) contain code from [Parsedown](https://github.com/erusev/parsedown), which is copyright Emanuil Rusev, erusev.com.
 
+
+## todo
+
+ - [ ] Add way of editing posts
+ - [ ] Add "special" posts (ie, about)
