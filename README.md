@@ -29,3 +29,8 @@ portions of this repository (ie, Parsedown.php) contain code from [Parsedown](ht
 
  - [ ] Add way of editing posts
  - [ ] Add "special" posts (ie, about)
+
+
+# note
+
+easyblog is old and barely works. please try out [nu](https://github.com/nu-dev/nu) instead.

@@ -1,0 +1,151 @@
+```
+import sys
+from link import *
+
+contexts = [Context("global")]
+currentContext = 0
+currLinkCollection = contexts[currentContext].linkCollection
+
+def getContext(name):
+    global contexts
+
+    i = 0
+    for context in contexts:
+        if name == context.name:
+            return i
+        i = i + 1
+
+    # new context
+    contexts.append(Context(name))
+    return i
+
+# recursive delve function
+def delve(key, depth, parent = "", train = ""):
+    train = train + "->" + key
+    # have we reached max depth?
+    if depth == 1:
+        print(train)
+        return
+
+    links = currLinkCollection.getLink(key) + contexts[0].linkCollection.getLink(key)
+
+    if len(links) == 0:
+        print(train)
+        return
+
+    # loop through links and recursively call self
+    for link in links:
+        if link == parent:
+            continue
+        delve(link, depth - 1, key, train)
+
+    # print own
+    # print("%d|%s" % (depth, ", ".join(links)))
+
+def parse_line(line):
+    global currentContext
+    global currLinkCollection
+
+    try:
+        if line[0] == "#" or line[0] == "\n":
+            return
+    except:
+        print("Error parsing line, ignoring line \"%s\"" % (line))
+
+    if len(line) < 3:
+        print("Error parsing line, ignoring line \"%s\"" % (line))
+        return
+
+    line = line.rstrip()
+
+    if line[:3] == "{{{":
+        # starting context
+        if currentContext != 0:
+            return True
+        currentContext = getContext(line[3:])
+        currLinkCollection = contexts[currentContext].linkCollection
+        return
+    elif line[:3] == "}}}":
+        currentContext = 0
+        currLinkCollection = contexts[currentContext].linkCollection
+        return
+
+    items = line.split(":")
+
+    if len(items) != 2:
+        items = line.split(">")
+        if len(items) != 2:
+            print("Error parsing line, ignoring: \"%s\"" % (line))
+            return
+        currLinkCollection.addLink(items[0], items[1])
+        return
+
+    currLinkCollection.addDualLink(items[0], items[1])
+
+def fetchLinks(link):
+    return ", ".join(currLinkCollection.getLink(" ".join(link)) + contexts[0].linkCollection.getLink(" ".join(link)))
+
+if __name__ == "__main__":
+    filename = raw_input("Please enter a filename to scan: ")
+    lineNum = 1
+    try:
+        for line in open(filename):
+            if parse_line(line) == True:
+                break
+    except IOError:
+        print("Error opening the file, just proceeding to input")
+
+    print("Entering interactive mode. Use \"\\help\" or \"?\" for help.")
+
+    try:
+        while True:
+            input = raw_input("? ").split(" ")
+            if input[0] == "\\assoc" or input[0] == "\\a" or input[0] == "\\set" or input[0] == "\\s":
+                input.pop(0)
+                input = " ".join(input)
+                parse_line(input)
+            elif input[0] == "\\remove" or input[0] == "\\r":
+                input.pop(0)
+                input = " ".join(input)
+                items = input.split(":")
+                if len(items) != 2:
+                    items = line.split(">")
+                    if len(items) != 2:
+                        print("Error parsing line, ignoring: \"%s\"" % (line))
+                        continue
+                    currLinkCollection.delLink(items[0], items[1])
+
+                currLinkCollection.delDualLink(items[0], items[1])
+            elif input[0] == "\\context" or input[0] == "\\c":
+                input.pop(0)
+                input = " ".join(input)
+                currentContext = getContext(input)
+                currLinkCollection = contexts[currentContext].linkCollection
+            elif input[0] == "\\dive" or input[0] == "\\d":
+                input.pop(0)
+                try:
+                    depth = int(input[0])
+                except ValueError:
+                    print("Error parsing line: Invalid number")
+                    continue
+                input.pop(0)
+                input = " ".join(input)
+                delve(input, depth)
+            elif input[0] == "\\help" or input[0] == "?" or input[0] == "\\h":
+                print("Current context: \"" + contexts[currentContext].name + "\"\n" + 
+                "Commands available:\n" +
+                "\\assoc <key>(: or >)<value>\n\tAssociate a new <value> to a <key>\n" +
+                "\\set <key>(: or >)<value>\n\tAlias of \\assoc\n" +
+                "\\remove <key>:<value>\n\tRemove the value <value> from <key>\n" +
+                "\\context <name>\n\tSwitch to context <name>\n" + 
+                "\\dive <depth> <key>\n\tRecursively dive through the values of <key>\n" + 
+                "Shortcuts for each of these can be accessed using the \nfirst letter of their respective names.\n" +
+                "<key>\n\tGet values associated with key <key>")
+            else:
+                print(fetchLinks(input))
+    except KeyboardInterrupt:
+        print("")
+        sys.exit(0)
+    #except:
+    #    print("Unhandled Error. Halting.")
+```
